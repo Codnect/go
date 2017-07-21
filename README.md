@@ -32,7 +32,7 @@
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        GoBinder.getInstance().initilaze(this);
+        GoBinder.getInstance().initialize(this);
     }
 
     @OnClick(value = R.id.buttonClick)
@@ -66,7 +66,7 @@
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            GoBinder.getInstance().initilaze(this);
+            GoBinder.getInstance().initialize(this);
         }
         
     }
