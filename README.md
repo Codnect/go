@@ -73,40 +73,95 @@
     
 ```
 
-#### @Form, @FormField and @OnClick Annotation
+#### @Model, @OnClick Annotation and Form 
+
+###### PersonFormModel.java
 
 ```java
-@LayoutBind(R.layout.activity_main)
-public class MainActivity extends AppCompatActivity {
+    public class PersonFormModel {
 
-    @ViewBind(R.id.buttonClick)
-    private Button buttonClick;
+        @ModelBind
+        private String name;
 
-    @ViewBind(R.id.editTextMessage)
-    private EditText editTextMessage;
+        @ModelBind
+        private int age;
 
-    @ViewBind(R.id.checkBox)
-    private CheckBox checkBox;
-
-    @Form(
-            name = "form",
-            fields = {
-                    @FormField(name = "message", id = R.id.editTextMessage),
-                    @FormField(name = "check", id = R.id.checkBox)
-            }
-    )
-    private ModelForm modelForm;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        GoBinder.getInstance().initilaze(this);
-    }
-
-    @OnClick(value = R.id.buttonClick, formName = "form")
-    public void clickButton(){
         /* ... */
-    }
 
-}
+    }
 ```
+
+###### activity_main.xml
+
+```xml
+    <?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:orientation="vertical"
+        tools:context="com.codnect.test_app.MainActivity">
+
+        <com.codnect.go.view.Form
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:modelName="personModel"
+            app:submit="@id/buttonClick"
+            >
+
+            <EditText
+                android:id="@+id/editTextPersonName"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:text="Hello World!"
+                android:tag="name"/>
+
+            <EditText
+                android:id="@+id/editTextPersonAge"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:text="Hello World!"/>
+
+            <Button
+                android:id="@+id/buttonClick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Click!"/>
+
+        </com.codnect.go.view.Form>
+
+    </LinearLayout>
+```
+
+###### MainActivity.java
+```java
+    @LayoutBind(R.layout.activity_main)
+    public class MainActivity extends AppCompatActivity {
+
+        @ViewBind(R.id.buttonClick)
+        private Button buttonClick;
+
+        @Model("personModel")
+        private PersonFormModel personFormModel;
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            GoBinder.getInstance().initialize(this);
+
+        }
+
+        @OnClick(value = R.id.buttonClick)
+        public void submitPersonForm(){
+            /* ... */
+        }
+
+    }
+```
+
