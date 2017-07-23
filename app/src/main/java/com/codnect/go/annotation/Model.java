@@ -6,13 +6,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Created by User on 21.7.2017.
+ * Created by User on 22.7.2017.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface FormField {
+@Target({ElementType.FIELD})
+public @interface Model {
 
-    String name();
+    String value();
 
-    int id();
 }

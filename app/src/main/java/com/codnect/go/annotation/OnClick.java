@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface OnClick {
 
-    int value();
+    int[] value();
 
     String formName() default "";
 

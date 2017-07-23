@@ -5,16 +5,13 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.codnect.go.GoBinder;
-import com.codnect.go.annotation.FormField;
-import com.codnect.go.annotation.Form;
 import com.codnect.go.annotation.LayoutBind;
+import com.codnect.go.annotation.Model;
 import com.codnect.go.annotation.OnClick;
 import com.codnect.go.annotation.ViewBind;
-import com.codnect.go.form.ModelForm;
+import com.codnect.test_app.model.PersonFormModel;
 
 @LayoutBind(R.layout.activity_main)
 public class MainActivity extends AppCompatActivity {
@@ -28,24 +25,19 @@ public class MainActivity extends AppCompatActivity {
     @ViewBind(R.id.checkBox)
     private CheckBox checkBox;
 
-    @Form(
-            name = "loginForm",
-            fields = {
-                    @FormField(name = "message", id = R.id.editTextMessage),
-                    @FormField(name = "check", id = R.id.checkBox)
-            }
-    )
-    private ModelForm loginForm;
+    @Model("personModel")
+    private PersonFormModel personFormModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        GoBinder.getInstance().initilaze(this);
+        GoBinder.getInstance().initialize(this);
+
     }
 
-    @OnClick(value = R.id.buttonClick, formName = "loginForm")
-    public void clickButton(){
-        Toast.makeText(MainActivity.this, "heyyy", Toast.LENGTH_LONG).show();
+    @OnClick(value = R.id.buttonClick)
+    public void submitPersonForm(){
+        /* ... */
     }
 
 }

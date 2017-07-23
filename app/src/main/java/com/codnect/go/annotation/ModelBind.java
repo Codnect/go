@@ -6,16 +6,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Created by User on 21.7.2017.
+ * Created by User on 23.7.2017.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface Form {
+public @interface ModelBind {
 
-    String name();
-
-    Class model() default void.class;
-
-    FormField[] fields() default {};
-
+    String value() default "";
 }
