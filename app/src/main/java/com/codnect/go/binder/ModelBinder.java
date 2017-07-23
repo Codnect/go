@@ -6,6 +6,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.codnect.go.annotation.ModelBind;
+import com.codnect.go.validation.Validator;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -24,12 +25,14 @@ public class ModelBinder {
 
     private Activity activity;
 
+    private Class<? extends Validator> validator;
+
     public ModelBinder(Activity activity){
         this.activity = activity;
         fields = new HashMap<>();
     }
 
-    public void bind(){
+    public ValidationErrors bind(){
 
         if(model instanceof HashMap){
 
@@ -48,9 +51,6 @@ public class ModelBinder {
                     }
                     ((HashMap)model).put(entry.getKey(), value);
                 }
-
-
-
 
             }
 
@@ -90,9 +90,23 @@ public class ModelBinder {
                     }
 
                     try {
-                        field.set(model, value);
-                    } catch (IllegalAccessException e) {
+                        Class fieldType = field.getType();
+                        if(fieldType == String.class){
+                            field.set(model, value);
+                        }
+                        else if(fieldType == int.class|| fieldType == Integer.class){
+                            field.set(model, Integer.parseInt((String) value));
+                        }
+                        else if(fieldType == boolean.class || fieldType == Boolean.class){
+                            field.set(model, Boolean.parseBoolean((String) value));
+                        }
+
+                    }
+                    catch (IllegalAccessException e) {
                         e.printStackTrace();
+                    }
+                    catch (Exception e){
+
                     }
 
                     if(!isAccessible){
@@ -105,7 +119,19 @@ public class ModelBinder {
 
         }
 
+        ValidationErrors validationErrors = new ValidationErrors();
+        if(validator != Validator.class){
+            try {
+                Validator v = validator.newInstance();
+                v.validate(model, validationErrors);
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
 
+        return validationErrors;
 
     }
 
@@ -133,4 +159,11 @@ public class ModelBinder {
         return fields.get(name);
     }
 
+    public Class<? extends Validator> getValidator() {
+        return validator;
+    }
+
+    public void setValidator(Class<? extends Validator> validator) {
+        this.validator = validator;
+    }
 }

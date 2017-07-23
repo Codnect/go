@@ -9,6 +9,7 @@ import com.codnect.go.annotation.Model;
 import com.codnect.go.annotation.OnClick;
 import com.codnect.go.annotation.ViewBind;
 import com.codnect.go.binder.ModelBinder;
+import com.codnect.go.binder.ValidationErrors;
 import com.codnect.go.view.Form;
 
 import java.lang.reflect.Field;
@@ -73,6 +74,7 @@ public class GoBinder {
                 String modelName = modelAnnotation.value();
                 ModelBinder modelBinder = new ModelBinder(activity);
                 modelBinder.setModelName(modelName);
+                modelBinder.setValidator(modelAnnotation.validator());
                 try {
                     Object modelObject = field.getType().newInstance();
                     modelBinder.setModel(modelObject);
@@ -149,26 +151,25 @@ public class GoBinder {
                         @Override
                         public void onClick(View v) {
                             String modelName = submitFormHashMap.get(v.getId());
-                            modelBinderHashMap.get(modelName).bind();
+                            ValidationErrors validationErrors = modelBinderHashMap.get(modelName).bind();
+
+                            Class[] paramTypes = method.getParameterTypes();
+                            Object[] paramObject = new Object[paramTypes.length];
+                            for(int param = 0; param < paramTypes.length; param++){
+                                if(paramTypes[param] == ValidationErrors.class){
+                                    paramObject[param] = validationErrors;
+                                }
+                                else if(paramTypes[param] == View.class){
+                                    paramObject[param] = v;
+                                }
+                            }
                             try {
-                                method.invoke(activity);
+                                method.invoke(activity, paramObject);
                             } catch (IllegalAccessException e) {
                                 e.printStackTrace();
                             } catch (InvocationTargetException e) {
                                 e.printStackTrace();
                             }
-                            /*
-                            try {
-                                String formName = onClickAnnotation.formName();
-                                if(formName != null){
-                                    formBindHashMap.get(formName).bind();
-                                }
-                                method.invoke(activity);
-                            } catch (IllegalAccessException e) {
-                                e.printStackTrace();
-                            } catch (InvocationTargetException e) {
-                                e.printStackTrace();
-                            }*/
                         }
                     });
                 }

@@ -1,6 +1,7 @@
 package com.codnect.test_app.model;
 
 import com.codnect.go.annotation.ModelBind;
+import com.codnect.go.annotation.validation.NotEmpty;
 
 /**
  * Created by User on 23.7.2017.
@@ -8,6 +9,7 @@ import com.codnect.go.annotation.ModelBind;
 public class PersonFormModel {
 
     @ModelBind
+    @NotEmpty
     private String name;
 
     @ModelBind
